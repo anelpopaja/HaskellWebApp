@@ -11,11 +11,9 @@ import           Data.Proxy (Proxy(..))
 import           Database.Persist (Key, Entity)
 import           Database.Persist.Postgresql (ConnectionString)
 import           Network.Wai.Handler.Warp (run)
---import           Network.Wai.Middleware.Cors  --NISAM USPJELA DA PODESIM DA RADI OVO, TAKO DA SE MORA KLIJENT OTVARATI U BROWSERU SA ISKLJUCENIM SIGURNOSNIM FLAG-OVIMA
 import           Servant.API
 import           Servant.Client
 import           Servant.Server
-
 import           Database (fetchCardPG, fetchAllCardsPG, fetchAllCardsForDeckPG, fetchRecentCardsPG, fetchPrekoJoinaPG, createDeckPG, createCardPG, deleteCardPG, localConnString)
 import           BasicSchema
 
@@ -31,8 +29,7 @@ type CardsAPI =
   :<|> "cards" :> "scoiatael" :> Get '[JSON] [Entity Card]
   :<|> "cards" :> "joinDeck" :> Get '[JSON] [(Entity Deck , Entity Card)]
   :<|> "cards" :> "join" :> Get '[JSON] [Entity Card]
-  :<|> "cards" :> Capture "cardid" Int64 :> Post '[JSON] () --Delete ZASAD
---  :<|> "decks" :> ReqBody '[JSON] Card :> Post '[JSON] Int64  --insert jezik, nesto ne radi
+  :<|> "cards" :> Capture "cardid" Int64 :> Post '[JSON] ()
 
 
 cardsAPI :: Proxy CardsAPI
@@ -92,7 +89,6 @@ cardsServer connString =
   (fetchRecentCardsHandler connString) :<|>
   (fetchPrekoJoinaHandler connString) :<|>
   (deleteCardHandler connString)
---  (createDeckHandler connString)
 
 runServer :: IO ()
 runServer = run 5000 (serve cardsAPI (cardsServer localConnString))

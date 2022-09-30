@@ -48,8 +48,7 @@ type Msg
     | MsgGetCardsScoiatael
     | MsgGetCardsLargest
     | MsgGotResults (Result Http.Error (List Card))
-    | MsgSuccesfulPost (Result Http.Error ()) --(Result Http.Error String) --TODO DODAJ S
-      --| GotText (Result Http.Error String)
+    | MsgSuccesfulPost (Result Http.Error ())
     | MsgInputTitleField String
     | MsgInputImageField String
     | MsgInputStrengthFieldAsString String
@@ -65,7 +64,6 @@ type Msg
 
 
 
---    | MsgKeyPressed String
 
 
 main : Program () Model Msg
@@ -87,10 +85,10 @@ initModel : Model
 initModel =
     { cardTitle = ""
     , cardImage = ""
-    , cardStrength = 0 --Maybe Int maybe.... mora 0 difoltno
+    , cardStrength = 0
     , cardLink = ""
     , cardClass = ""
-    , cardDeckId = 1 --Mora 1 difoltno
+    , cardDeckId = 1
     , cardId = 1
     , poruka = ""
     , results = []
@@ -117,7 +115,6 @@ update msg model =
         MsgInputStrengthFieldAsString newStrength ->
             ( { model | cardStrength = Maybe.withDefault 0 (String.toInt newStrength) }, Cmd.none )
 
-        --JOS JE BOLJE DA SE RAZLOZI NA SLUCAJEVE I POSEBNO OBRADE UMJESTO Maybe.withDefault
         MsgInputLinkField newLink ->
             ( { model | cardLink = newLink }, Cmd.none )
 
@@ -127,7 +124,6 @@ update msg model =
         MsgInputDeckIdFieldAsString newDeckId ->
             ( { model | cardDeckId = Maybe.withDefault 0 (String.toInt newDeckId) }, Cmd.none )
 
-        --JOS JE BOLJE DA SE RAZLOZI NA SLUCAJEVE I POSEBNO OBRADE UMJESTO Maybe.withDefault
         MsgAddCard ->
             updateAddCard model
 
@@ -161,7 +157,6 @@ update msg model =
         MsgInputIdFieldAsString newId ->
             ( { model | cardId = Maybe.withDefault 1 (String.toInt newId) }, Cmd.none )
 
-        --JOS JE BOLJE DA SE RAZLOZI NA SLUCAJEVE I POSEBNO OBRADE UMJESTO Maybe.withDefault
         MsgSuccesfulPost result ->
             let
                 newModel =
@@ -171,7 +166,6 @@ update msg model =
                 Ok data ->
                     ( { newModel | errorMessage = Nothing }, Cmd.none )
 
-                --poruka = data, errorMessage = Nothing }, Cmd.none )
                 Err error ->
                     let
                         errorMessage =
@@ -262,7 +256,6 @@ update msg model =
                 Ok data ->
                     ( { newModel | errorMessage = Nothing }, Cmd.none )
 
-                --poruka = data, errorMessage = Nothing }, Cmd.none )
                 Err error ->
                     let
                         errorMessage =
@@ -335,21 +328,9 @@ updateLargest model =
     ( { model | loading = True }, cmdSearchLargest )
 
 
-
---subscriptions : model -> Sub Msg
---subscriptions _ =
---    Browser.Events.onKeyPress keyPressed
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
-
---keyPressed : JD.Decoder Msg
---keyPressed =
---    JD.map MsgKeyPressed (JD.field "key" JD.string)
 
 
 viewLayout : Model -> Html.Html Msg
@@ -391,7 +372,7 @@ viewSearchBar model =
                 }
             , EI.search []
                 { onChange = MsgInputStrengthFieldAsString
-                , text = String.fromInt model.cardStrength --PROMENITI DA MOZE MAYBE INT
+                , text = String.fromInt model.cardStrength 
                 , placeholder = Nothing
                 , label = EI.labelLeft [ EF.color (E.rgb255 0xEE 0xEE 0xEE) ] (E.text "Strength:")
                 }
@@ -409,7 +390,7 @@ viewSearchBar model =
                 }
             , EI.search []
                 { onChange = MsgInputDeckIdFieldAsString
-                , text = String.fromInt model.cardDeckId --PROMENITI DA MOZE MAYBE INT
+                , text = String.fromInt model.cardDeckId
                 , placeholder = Nothing
                 , label = EI.labelLeft [ EF.color (E.rgb255 0xEE 0xEE 0xEE) ] (E.text "Deck Id:")
                 }
@@ -418,7 +399,7 @@ viewSearchBar model =
         , E.row [ E.spacing 10, E.centerX, E.paddingXY 500 30, EBG.color (E.rgb255 0xC9 0xC1 0x9F) ]
             [ EI.search []
                 { onChange = MsgInputIdFieldAsString
-                , text = String.fromInt model.cardId --PROMENITI DA MOZE MAYBE INT
+                , text = String.fromInt model.cardId
                 , placeholder = Nothing
                 , label = EI.labelLeft [ EF.color (E.rgb255 0xEE 0xEE 0xEE) ] (E.text "Card Id:")
                 }
@@ -635,10 +616,6 @@ viewGetCardsScoiataelButton =
 viewGetCardsLargestButton : E.Element Msg
 viewGetCardsLargestButton =
     viewButtonGeneric "10 Strongest Cards" MsgGetCardsLargest
-
-
-
---NE KORISTIM OVAJ, ZBOG HEDERA NEODGOVARAJUCIH ZA MOJ SERVER
 
 
 cmdAddCard : Model -> Cmd Msg

@@ -37,7 +37,7 @@ logFilter _ (LevelOther _) = False
 fetchCardPG :: PGInfo -> Int64 -> IO (Maybe Card)
 fetchCardPG connString bid = runAction connString (get (toSqlKey bid))
 
---SELECT WHERE ZA ODREDJENI JEZIK:
+
 fetchAllCardsForDeckPG :: PGInfo -> Int64  -> IO [Entity Card]
 fetchAllCardsForDeckPG connString lid = runAction connString fetchAction
   where
@@ -52,10 +52,9 @@ fetchAllCardsPG connString = runAction connString fetchAction
   where
     fetchAction :: SqlPersistT (LoggingT IO) [Entity Card]
     fetchAction = select . from $ \cards2 -> do
-      --where_ (articles ^. ArticleAuthorId ==. val (toSqlKey uid))
       return cards2
 
---PRIMJER JOINA DVE TABELE: --vraca se lista parova (jezik, knjiga) tako da to ne koristim u projektu, ali sam testirala preko Postmana i radi
+
 fetchRecentCardsPG :: PGInfo -> IO [(Entity Deck, Entity Card)]
 fetchRecentCardsPG connString = runAction connString fetchAction
   where
@@ -66,7 +65,6 @@ fetchRecentCardsPG connString = runAction connString fetchAction
       limit 10
       return (decks, cards)
 
---PRIMJER JOINA DVE TABELE: --ne vracam tuple, tako da ovo koristim u projektu jer vracam listu knjiga kao i inace
 fetchPrekoJoinaPG :: PGInfo -> IO [Entity Card]
 fetchPrekoJoinaPG connString = runAction connString fetchAction
   where
@@ -84,7 +82,7 @@ createDeckPG :: PGInfo -> Deck  -> IO Int64
 createDeckPG connString deck = fromSqlKey <$> runAction connString (insert deck)
 
 
-deleteCardPG :: PGInfo -> Int64 -> IO () --ZASTO JE TIPA IO (), SAD NEMAM NACIN DA SIGNALIZUJEM DA LI JE USPJESNO BRISANJE ILI JE NEUSPJESNO -- delete funkcija iz 
+deleteCardPG :: PGInfo -> Int64 -> IO () 
 deleteCardPG connString bid = runAction connString (delete cardKey)
   where
     cardKey :: Key Card
