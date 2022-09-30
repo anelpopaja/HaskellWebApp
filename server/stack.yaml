@@ -1,0 +1,7 @@
+resolver: lts-16.29
+
+packages:
+- .
+
+docker:
+  enable: false
