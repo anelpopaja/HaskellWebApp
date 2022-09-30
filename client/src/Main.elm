@@ -17,14 +17,14 @@ import Svg.Attributes as SA
 type alias Model =
     { cardTitle : String
     , cardImage : String
-    , cardStrength : Int -- Int  --Maybe Int maybe.... PROMIJENITI NA MAYBE INT
+    , cardStrength : Int
     , cardLink : String
     , cardClass : String
-    , cardDeckId : Int --PROMIJENITI NA MAYBE INT
-    , cardId : Int --PROMIJENITI NA MAYBE INT
+    , cardDeckId : Int
+    , cardId : Int
     , poruka : String
     , results : List Card
-    , resultCard : Maybe Card --MOZDA I NE MORA MAYBE JER SIGURNO DOBIJAMO BOOK KAO REZULTAT AKO NEMA GRESKE, ALI INIT MODEL PRAVI PROBLEM BEZ TOGA....
+    , resultCard : Maybe Card 
     , errorMessage : Maybe String
     , loading : Bool
     }

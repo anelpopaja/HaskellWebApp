@@ -103,7 +103,6 @@ instance FromJSON (Entity Deck) where
     lid <- o .: "id"
     return $ Entity (toSqlKey lid) deck
 
---
 instance FromJSON Deck where
   parseJSON = withObject "Deck" parseDeck
 
